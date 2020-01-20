@@ -1,5 +1,5 @@
 node{
-      def mvnHome = tool name: 'maven', type: 'maven' 
+      def mvnHome = tool name: 'maven' 
       stage('Checkout'){
          git 'https://github.com/LovesCloud/java-tomcat-maven-example'
        
