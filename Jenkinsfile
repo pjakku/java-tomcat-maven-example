@@ -6,6 +6,8 @@ pipeline {
         stage('Git Commit') {
             steps {
                 echo 'Commit message'
+                echo "Multiline shell steps works too"
+                  
             }
         }
         stage('Integration') {
