@@ -1,6 +1,10 @@
 pipeline {
+    def mvnHome = tool name: 'maven', type: 'maven'
     agent any
-    stages {
+    stages { 
+        stage('Checkout'){
+         git 'https://github.com/LovesCloud/java-tomcat-maven-example'
+            
         stage('Git Commit') {
             steps {
                 echo 'Commit message'
