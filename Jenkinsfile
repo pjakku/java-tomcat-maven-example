@@ -1,4 +1,4 @@
-[8:17 PM, 1/26/2020] Sai Lakhan Verdic: pipeline {
+pipeline {
     agent any
     stages {
         stage('Checkout') {
