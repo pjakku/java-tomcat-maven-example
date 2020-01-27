@@ -18,12 +18,12 @@ pipeline {
                 bat 'mvn test'
             }
         }
-       // stage('JaCoCo') {
+        stage('code') {
             steps {
                 echo 'Code Coverage'
                 jacoco()
             }
-        }//
+        }
         stage('Sonar') {
             steps {
                 echo 'Sonar Scanner'
