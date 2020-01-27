@@ -1,58 +1,23 @@
-pipeline {
-    agent any
-    stages {
-        stage('Checkout') {
-            steps {
-                echo 'Checkout'
-            }
-        }
-        stage('Build') {
-            steps {
-                echo 'Clean Build'
-                //bat 'mvn clean compile'
-            }
-        }
-        stage('Test') {
-            steps {
-                echo 'Testing'
-                //bat 'mvn test'
-            }
-        }
-        stage('code') {
-            steps {
-                echo 'Code Coverage'
-                jacoco()
-            }
-        }
-        
-        stage('Package') {
-            steps {
-                echo 'Packaging'
-                bat 'mvn package -DskipTests'
-            }
-        }
-        stage('Deploy') {
-            steps {
-                echo '## TODO DEPLOYMENT ##'
-            }
-        }
-    }
+node{
+      def mvnHome = tool name: 'maven', type: 'maven' 
+      stage('Checkout'){
+         git 'https://github.com/LovesCloud/java-tomcat-maven-example'
+       
+      }  
+      stage('Build'){
+         //// Get maven home path and build
+        sh "${mvnHome}/bin/mvn clean package -Dmaven.test.skip=true"
+      }
+     stage ('Test-JUnit'){
+         sh "'${mvnHome}/bin/mvn' test surefire-report:report"
+      }  
     
-    post {
-        always {
-            echo 'JENKINS PIPELINE'
-        }
-        success {
-            echo 'JENKINS PIPELINE SUCCESSFUL'
-        }
-        failure {
-            echo 'JENKINS PIPELINE FAILED'
-        }
-        unstable {
-            echo 'JENKINS PIPELINE WAS MARKED AS UNSTABLE'
-        }
-        changed {
-            echo 'JENKINS PIPELINE STATUS HAS CHANGED SINCE LAST EXECUTION'
-        }
-    }
-}
+      stage('Deploy') {     
+            sshagent(['Tomcat-jenkins']) {
+               sh 'scp -o StrictHostKeyChecking=no target/tomcatdeploymnetdemo.war jenkins@35.193.54.220:/opt/tomcat/webapps'
+              
+          }
+         
+     }
+      
+ }
