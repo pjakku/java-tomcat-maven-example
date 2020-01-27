@@ -1,12 +1,12 @@
 pipeline {
     agent any
     stages {
-        stage('Checkout') {
+        stage('Git Commit') {
             steps {
-                echo 'Checkout'
+                echo 'commit'
             }
         }
-        stage('Build') {
+        stage('integration') {
             steps {
                 echo 'Clean Build'
                 bat 'mvn clean compile'
@@ -18,12 +18,12 @@ pipeline {
                 bat 'mvn test'
             }
         }
-        stage('JaCoCo') {
+       // stage('JaCoCo') {
             steps {
                 echo 'Code Coverage'
                 jacoco()
             }
-        }
+        }//
         stage('Sonar') {
             steps {
                 echo 'Sonar Scanner'
