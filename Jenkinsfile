@@ -3,10 +3,10 @@ pipeline {
     stages {
         stage('Git Commit') {
             steps {
-                echo 'commit'
+                echo 'Commit message'
             }
         }
-        stage('integration') {
+        stage('Integration') {
             steps {
                 echo 'Clean Build'
                 bat 'mvn clean compile'
@@ -18,7 +18,7 @@ pipeline {
                 bat 'mvn test'
             }
         }
-        stage('code') {
+        stage('JaCoCo') {
             steps {
                 echo 'Code Coverage'
                 jacoco()
