@@ -1,35 +1,66 @@
-//node{
-  //    def mvnHome = tool name: 'maven'
-stages {  
-      stage('Commit'){
-            steps{
-                 sh label: "Test Result"
-                 sh "Yarn ckean"
+[8:17 PM, 1/26/2020] Sai Lakhan Verdic: pipeline {
+    agent any
+    stages {
+        stage('Checkout') {
+            steps {
+                echo 'Checkout'
             }
-           // steps{
-                  git 'https://github.com/LovesCloud/java-tomcat-maven-example'
-            //}
-       
-      }  
-      stage('Integration'){
-         git 'https://github.com/LovesCloud/java-tomcat-maven-example'
-       
-      }  
-      stage('Build'){
-         //// Get maven home path and build
-        sh "${mvnHome}/bin/mvn clean package -Dmaven.test.skip=true"
-      }
-     stage ('Test-JUnit'){
-         sh "'${mvnHome}/bin/mvn' test surefire-report:report"
-      }  
+        }
+        stage('Build') {
+            steps {
+                echo 'Clean Build'
+                bat 'mvn clean compile'
+            }
+        }
+        stage('Test') {
+            steps {
+                echo 'Testing'
+                bat 'mvn test'
+            }
+        }
+        stage('JaCoCo') {
+            steps {
+                echo 'Code Coverage'
+                jacoco()
+            }
+        }
+        stage('Sonar') {
+            steps {
+                echo 'Sonar Scanner'
+               	//def scannerHome = tool 'SonarQube Scanner 3.0'
+			    withSonarQubeEnv('SonarQube Server') {
+			    	bat 'C:/Dock/ci/sonar/sonar-scanner-3.0.3.778-windows/bin/sonar-scanner'
+			    }
+            }
+        }
+        stage('Package') {
+            steps {
+                echo 'Packaging'
+                bat 'mvn package -DskipTests'
+            }
+        }
+        stage('Deploy') {
+            steps {
+                echo '## TODO DEPLOYMENT ##'
+            }
+        }
+    }
     
-      stage('Deploy') {     
-            sshagent(['Tomcat-jenkins']) {
-               sh 'scp -o StrictHostKeyChecking=no target/tomcatdeploymnetdemo.war ec2-user@3.133.161.254:8090:/opt/tomcat/webapps'
-                  //jenkins@35.193.54.220
-              
-          }
-         
-     }
-      
- }
+    post {
+        always {
+            echo 'JENKINS PIPELINE'
+        }
+        success {
+            echo 'JENKINS PIPELINE SUCCESSFUL'
+        }
+        failure {
+            echo 'JENKINS PIPELINE FAILED'
+        }
+        unstable {
+            echo 'JENKINS PIPELINE WAS MARKED AS UNSTABLE'
+        }
+        changed {
+            echo 'JENKINS PIPELINE STATUS HAS CHANGED SINCE LAST EXECUTION'
+        }
+    }
+}
