@@ -1,6 +1,16 @@
 node{
-      def mvnHome = tool name: 'maven' 
-      stage('Checkout'){
+      def mvnHome = tool name: 'maven'
+      stage('Commit'){
+            step{
+                 sh label: "Test Result"
+                 sh "Yarn ckean"
+            }
+            step{
+                 sh git 'https://github.com/LovesCloud/java-tomcat-maven-example'
+            }
+       
+      }  
+      stage('Integration'){
          git 'https://github.com/LovesCloud/java-tomcat-maven-example'
        
       }  
