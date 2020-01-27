@@ -9,19 +9,19 @@ pipeline {
         stage('Integration') {
             steps {
                 echo 'Clean Build'
-                bat 'mvn clean compile'
+               // bat 'mvn clean compile'
             }
         }
         stage('Test') {
             steps {
                 echo 'Testing'
-                bat 'mvn test'
+                //bat 'mvn test'
             }
         }
-        stage('JaCoCo') {
+        stage('code') {
             steps {
                 echo 'Code Coverage'
-                jacoco()
+                //jacoco()
             }
         }
         //test
